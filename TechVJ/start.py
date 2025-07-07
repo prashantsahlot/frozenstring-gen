@@ -7,54 +7,65 @@ from TechVJ.db import db
 async def start(bot: Client, msg: Message):
     if not await db.is_user_exist(msg.from_user.id):
         await db.add_user(msg.from_user.id, msg.from_user.first_name)
+
     if F_SUB:
         try:
+            # Check if user is already in the channel
             await bot.get_chat_member(int(F_SUB), msg.from_user.id)
         except:
+            # User is NOT a member — generate invite link and ask to join
             try:
                 invite_link = await bot.create_chat_invite_link(int(F_SUB))
             except:
-                await msg.reply("**Make Sure I Am Admin In Your Channel**")
+                await msg.reply("⚠️ Please ensure I have admin rights in your update channel!")
                 return 
+            
             key = InlineKeyboardMarkup(
                 [[
-                    InlineKeyboardButton("🌹 Join Channel 🌹", url=invite_link.invite_link),
-                    InlineKeyboardButton("✨ Check Again ✨", callback_data="chk")
+                    InlineKeyboardButton("🔔 Join Update Channel", url=invite_link.invite_link),
+                    InlineKeyboardButton("✅ Check Again", callback_data="chk")
                 ]]
-            ) 
-        await msg.reply_text("**⚠️Access Denied!⚠️\n\nPlease Join My Update Channel To Use Me.If You Joined The Channel Then Click On Check Again Button To Confirm.**", reply_markup=key)
-        return 
+            )
+            await msg.reply_text(
+                "**🚫 Access Denied! 🚫\n\nTo use this bot, please join the update channel first. Once joined, tap 'Check Again' to continue.**", 
+                reply_markup=key
+            )
+            return  # Stop further code since user needs to join
+
+    # User already in channel or no F_SUB check needed — show welcome message
     me = (await bot.get_me()).mention
     await bot.send_message(
         chat_id=msg.chat.id,
-        text=f"""<b>𝐇𝐞𝐲 {msg.from_user.mention}🍷,\n\nɪ ᴀᴍ {me},\nᴛʀᴜsᴛᴇᴅ 𝗦𝗧𝗥𝗜𝗡𝗚 𝗚𝗥𝗡𝗘𝗥𝗔𝗧𝗢𝗥 ʙᴏᴛ.ғᴜʟʟʏ sᴀғᴇ & sᴇᴄᴜʀᴇ.\nɴᴏ ᴀɴʏ ᴇʀʀᴏʀ\n\nMade With By : [Zoro Bot](https://t.me/PAID_PROMOTION_PROOFS) !</b>""",
+        text=f"""<b>👋 Hello {msg.from_user.mention}!\n\nI am {me},\nyour trusted <u>String Session Generator Bot</u> — secure, fast, and reliable.\n\n✨ Enjoy hassle-free session generation with complete safety.\n\nPowered by: [Frozen Bots](https://t.me/vibeshiftbots)</b>""",
         reply_markup=InlineKeyboardMarkup(
             [[
-                InlineKeyboardButton(text="⚡ Generate String Session ⚡", callback_data="generate")
+                InlineKeyboardButton(text="⚡ Create String Session ⚡", callback_data="generate")
             ],[
-                InlineKeyboardButton("⚡ Support Group ✨", url="https://t.me/Frozensupport1"),
-                InlineKeyboardButton("🌹 Join Channel 🌹", url="https://t.me/vibeshiftbots")
+                InlineKeyboardButton("💬 Support Group", url="https://t.me/Frozensupport1"),
+                InlineKeyboardButton("📢 Updates", url="https://t.me/vibeshiftbots")
             ]]
         )
     )
 
 @Client.on_callback_query(filters.regex("chk"))
-async def chk(bot : Client, cb : CallbackQuery):
+async def chk(bot: Client, cb: CallbackQuery):
     try:
         await bot.get_chat_member(int(F_SUB), cb.from_user.id)
     except:
-        await cb.answer("🙅‍♂️ You are not joined my channel first join channel then check again. 🙅‍♂️", show_alert=True)
+        await cb.answer("❗ You haven't joined the channel yet. Please join first and then check again.", show_alert=True)
         return 
+    
     me = (await bot.get_me()).mention
     await bot.send_message(
         chat_id=cb.from_user.id,
-        text=f"""<b>𝐇𝐞𝐲 {cb.from_user.mention}🍷,\n\nɪ ᴀᴍ {me},\nᴛʀᴜsᴛᴇᴅ 𝗦𝗧𝗥𝗜𝗡𝗚 𝗚𝗥𝗡𝗘𝗥𝗔𝗧𝗢𝗥 ʙᴏᴛ.ғᴜʟʟʏ sᴀғᴇ & sᴇᴄᴜʀᴇ.\nɴᴏ ᴀɴʏ ᴇʀʀᴏʀ\n\nMade With By : [Zozo Bots](https://t.me/PAID_PROMOTION_PROOFS) !</b>""",
+        text=f"""<b>👋 Hello {cb.from_user.mention}!\n\nI am {me},\nyour trusted <u>String Session Generator Bot</u> — secure, fast, and reliable.\n\n✨ Enjoy hassle-free session generation with complete safety.\n\nPowered by: [Frozen Bots](https://t.me/vibeshiftbots)</b>""",
         reply_markup=InlineKeyboardMarkup(
             [[
-                InlineKeyboardButton(text="⚡ Generate String Session ⚡", callback_data="generate")
+                InlineKeyboardButton(text="⚡ Create String Session ⚡", callback_data="generate")
             ],[
-                InlineKeyboardButton("💕 Support Group 💕", url="https://t.me/Frozensupport1"),
-                InlineKeyboardButton("⚡ Update Channel ✨", url="https://t.me/vibeshiftbots")
+                InlineKeyboardButton("💬 Support Group", url="https://t.me/Frozensupport1"),
+                InlineKeyboardButton("📢 Updates", url="https://t.me/vibeshiftbots")
             ]]
         )
     )
+

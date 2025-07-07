@@ -10,10 +10,8 @@ async def start(bot: Client, msg: Message):
 
     if F_SUB:
         try:
-            # Check if user is already in the channel
             await bot.get_chat_member(int(F_SUB), msg.from_user.id)
         except:
-            # User is NOT a member — generate invite link and ask to join
             try:
                 invite_link = await bot.create_chat_invite_link(int(F_SUB))
             except:
@@ -30,13 +28,13 @@ async def start(bot: Client, msg: Message):
                 "**🚫 Access Denied! 🚫\n\nTo use this bot, please join the update channel first. Once joined, tap 'Check Again' to continue.**", 
                 reply_markup=key
             )
-            return  # Stop further code since user needs to join
+            return
 
-    # User already in channel or no F_SUB check needed — show welcome message
     me = (await bot.get_me()).mention
-    await bot.send_message(
+    await bot.send_photo(
         chat_id=msg.chat.id,
-        text=f"""<b>👋 Hello {msg.from_user.mention}!\n\nI am {me},\nyour trusted <u>String Session Generator Bot</u> — secure, fast, and reliable.\n\n✨ Enjoy hassle-free session generation with complete safety.\n\nPowered by: [Frozen Bots](https://t.me/vibeshiftbots)</b>""",
+        photo="https://frozen-imageapi.lagendplayersyt.workers.dev/file/03e0845a-3d63-4b10-bd49-ea1298ec7d8a.png",
+        caption=f"""<b>👋 Hello {msg.from_user.mention}!\n\nI am {me},\nyour trusted <u>String Session Generator Bot</u> — secure, fast, and reliable.\n\n✨ Enjoy hassle-free session generation with complete safety.\n\nPowered by: [Frozen Bots](https://t.me/vibeshiftbots)</b>""",
         reply_markup=InlineKeyboardMarkup(
             [[
                 InlineKeyboardButton(text="⚡ Create String Session ⚡", callback_data="generate")
@@ -56,9 +54,10 @@ async def chk(bot: Client, cb: CallbackQuery):
         return 
     
     me = (await bot.get_me()).mention
-    await bot.send_message(
+    await bot.send_photo(
         chat_id=cb.from_user.id,
-        text=f"""<b>👋 Hello {cb.from_user.mention}!\n\nI am {me},\nyour trusted <u>String Session Generator Bot</u> — secure, fast, and reliable.\n\n✨ Enjoy hassle-free session generation with complete safety.\n\nPowered by: [Frozen Bots](https://t.me/vibeshiftbots)</b>""",
+        photo="https://frozen-imageapi.lagendplayersyt.workers.dev/file/03e0845a-3d63-4b10-bd49-ea1298ec7d8a.png",
+        caption=f"""<b>👋 Hello {cb.from_user.mention}!\n\nI am {me},\nyour trusted <u>String Session Generator Bot</u> — secure, fast, and reliable.\n\n✨ Enjoy hassle-free session generation with complete safety.\n\nPowered by: [Frozen Bots](https://t.me/vibeshiftbots)</b>""",
         reply_markup=InlineKeyboardMarkup(
             [[
                 InlineKeyboardButton(text="⚡ Create String Session ⚡", callback_data="generate")
@@ -68,4 +67,5 @@ async def chk(bot: Client, cb: CallbackQuery):
             ]]
         )
     )
+
 
